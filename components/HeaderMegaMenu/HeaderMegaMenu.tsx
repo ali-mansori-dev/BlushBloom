@@ -32,6 +32,8 @@ import classes from "./HeaderMegaMenu.module.css";
 import Link from "next/link";
 import UserDropDown from "./Menu";
 import Cart from "./cart";
+import { LuChevronDown } from "react-icons/lu";
+import { InputWithButton } from "../InputWithButton";
 
 const mockdata = [
   {
@@ -90,73 +92,64 @@ export function HeaderMegaMenu() {
   ));
 
   return (
-    <Box pos={"fixed"} top={0} left={0} right={0} bg={"#fff"}>
+    <Box pos={"fixed"} top={0} left={0} right={0} bg={"#fff"} className="z-50">
       <header className={classes.header}>
         <Container className={`w-full`} size={"xl"}>
           <Group justify="space-between" h="100%">
-            <Link className="text-xl font-bold" href={`/`}>
-              BlushBloom
-            </Link>
+            <div className="inline-flex gap-12 items-center">
+              <Link className="text-xl font-bold" href={`/`}>
+                BlushBloom
+              </Link>
+              <Group h="100%" gap={24} visibleFrom="sm">
+                <a href="#" className={classes.link}>
+                  Home
+                </a>
+                <HoverCard
+                  width={600}
+                  position="bottom"
+                  radius="md"
+                  shadow="md"
+                  withinPortal
+                >
+                  <HoverCard.Target>
+                    <a href="#" className={classes.link}>
+                      <Center inline>
+                        <Box component="span" mr={5}>
+                          Features
+                        </Box>
+                        <LuChevronDown color="blue" />
+                      </Center>
+                    </a>
+                  </HoverCard.Target>
 
-            <Group h="100%" gap={24} visibleFrom="sm">
-              <a href="#" className={classes.link}>
-                Home
-              </a>
-              <HoverCard
-                width={600}
-                position="bottom"
-                radius="md"
-                shadow="md"
-                withinPortal
-              >
-                <HoverCard.Target>
-                  <a href="#" className={classes.link}>
-                    <Center inline>
-                      <Box component="span" mr={5}>
-                        Features
-                      </Box>
-                      {/* <IconChevronDown size={16} color={theme.colors.blue[6]} /> */}
-                    </Center>
-                  </a>
-                </HoverCard.Target>
-
-                <HoverCard.Dropdown style={{ overflow: "hidden" }}>
-                  <Group justify="space-between" px="md">
-                    <Text fw={500}>Features</Text>
-                    <Anchor href="#" fz="xs">
-                      View all
-                    </Anchor>
-                  </Group>
-
-                  <Divider my="sm" />
-
-                  <SimpleGrid cols={2} spacing={0}>
-                    {links}
-                  </SimpleGrid>
-
-                  <div className={classes.dropdownFooter}>
-                    <Group justify="space-between">
-                      <div>
-                        <Text fw={500} fz="sm">
-                          Get started
-                        </Text>
-                        <Text size="xs" c="dimmed">
-                          Their food sources have decreased, and their numbers
-                        </Text>
-                      </div>
-                      <Button variant="default">Get started</Button>
+                  <HoverCard.Dropdown style={{ overflow: "hidden" }}>
+                    <Group justify="space-between" px="md">
+                      <Text fw={500}>Features</Text>
+                      <Anchor href="#" fz="xs">
+                        View all
+                      </Anchor>
                     </Group>
-                  </div>
-                </HoverCard.Dropdown>
-              </HoverCard>
-              <a href="#" className={classes.link}>
-                Learn
-              </a>
-              <a href="#" className={classes.link}>
-                Academy
-              </a>
-            </Group>
 
+                    <Divider my="sm" />
+
+                    <SimpleGrid cols={2} spacing={0}>
+                      {links}
+                    </SimpleGrid>
+
+                  </HoverCard.Dropdown>
+                </HoverCard>
+                <a href="#" className={classes.link}>
+                  Learn
+                </a>
+                <a href="#" className={classes.link}>
+                  Academy
+                </a>
+              </Group>
+            </div>
+
+            <div className="w-[380px] hidden md:block">
+              <InputWithButton />
+            </div>
             <Group visibleFrom="sm">
               <UserDropDown />
               <Cart />
