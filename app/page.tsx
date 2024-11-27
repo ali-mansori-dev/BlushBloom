@@ -1,11 +1,15 @@
-import { Button, TextInput } from "@mantine/core";
+"use client";
+import CategoryList from "@/components/CategoryList";
+import ProductList from "@/components/ProductList";
+import { Container } from "@mantine/core";
 
 export default function Home() {
   return (
-    <div className="grid">
-      <Button color="pink">Click me</Button>
-      <Button>Click me</Button>
-      <TextInput label="Input label" description="Input description" />
-    </div>
+    <Container size={"xl"} className="flex flex-col gap-12">
+      CategoryList
+      <CategoryList />
+      ProductList
+      <ProductList />
+    </Container>
   );
 }
