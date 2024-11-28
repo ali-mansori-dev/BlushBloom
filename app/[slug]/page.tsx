@@ -1,3 +1,7 @@
+"use client";
+import { useContext, useEffect, useState } from "react";
+import { WixClientContext } from "@/context/wixContext";
+import { wixClientServer } from "@/lib/helper/wixClientServer";
 import {
   ActionIcon,
   Badge,
@@ -8,10 +12,42 @@ import {
   Group,
   Text,
 } from "@mantine/core";
-import React from "react";
+import { notFound } from "next/navigation";
 import { LuMinus, LuPlus, LuTrash } from "react-icons/lu";
+import { useRouter } from "next/router";
 
 const Slug = () => {
+  const router = useRouter();
+  const { slug } = router.query;
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [data, setData] = useState<any>([]);
+  const myWixClient = useContext(WixClientContext);
+
+  useEffect(() => {
+    console.log(slug);
+
+    (async function () {
+      const { items } = await myWixClient.products
+        .queryProducts()
+        .eq("slug", slug)
+        .find();
+      setIsLoading(false);
+      setData(items);
+    })();
+  }, [myWixClient]);
+
+  // const products = await wixClient.products
+  //   .queryProducts()
+  //   .eq("slug", "i-m-a-product-5")
+  //   .find();
+
+  // if (!products.items[0]) {
+  //   return notFound();
+  // }
+
+  // const product = products.items[0];
+  // console.log(product);
+
   return (
     <Container size={"xl"} className="flex flex-col lg:flex-row gap-12">
       <div className="lg:w-2/5 flex flex-col gap-4">

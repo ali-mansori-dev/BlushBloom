@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Grid, LoadingOverlay } from "@mantine/core";
+import { Grid, LoadingOverlay, Skeleton } from "@mantine/core";
 import { FeaturesCard } from "./FeaturesCard/FeaturesCard";
 import { WixClientContext } from "@/context/wixContext";
 
@@ -16,14 +16,12 @@ const ProductList = () => {
     })();
   }, [myWixClient]);
 
+  if (isLoading) {
+    return <Skeleton height={50} />;
+  }
+
   return (
     <div className="flex flex-col gap-8">
-      <LoadingOverlay
-        visible={isLoading}
-        zIndex={1000}
-        overlayProps={{ radius: "sm", blur: 2 }}
-        loaderProps={{ color: "pink", type: "bars" }}
-      />
       <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 30 }}>
         {data?.map((item, index) => (
           <Grid.Col key={index} span={{ base: 12, xs: 3 }}>

@@ -12,6 +12,7 @@
     "@mantine/core": "^7.14.2",
     "@mantine/hooks": "^7.14.2",
     "@wix/ecom": "^1.0.844",
+    "@wix/members": "^1.0.117",
     "@wix/sdk": "^1.14.4",
     "@wix/stores": "^1.0.288",
     "js-cookie": "^3.0.5",
