@@ -53,12 +53,12 @@ const mockdata = [
   },
   {
     // icon: IconFingerprint,
-    title: "Security",
+    title: "Hair Cair",
     description: "The shell’s rounded shape and the grooves on its.",
   },
   {
     // icon: IconChartPie3,
-    title: "Analytics",
+    title: "Skin Care",
     description: "This Pokémon uses its flying ability to quickly chase",
   },
   {
