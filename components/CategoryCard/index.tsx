@@ -1,10 +1,20 @@
-export default function CategoryCard() {
+import Link from "next/link";
+
+interface Props {
+  name: string;
+  slug: string;
+  media: { mainMedia: { thumbnail: { url: string } } };
+}
+export default function CategoryCard({ name, slug, media }: Props) {
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
+    <Link
+      href={`/c/${slug}`}
+      className="flex flex-col items-center justify-center gap-4"
+    >
       <div className="bg-gray-100 rounded-xl overflow-hidden">
-        <img src="https://www.thebeautystore.com/cdn/shop/collections/Hair_Care-453230799_2039x1530.jpg?v=1730912098" alt="ddd" />
+        <img src={media?.mainMedia?.thumbnail?.url} className="w-[90px] h-[90px] object-cover" alt={name} />
       </div>
-      <span className="text-lg">Hair Care</span>
-    </div>
+      <span className="text-lg">{name}</span>
+    </Link>
   );
 }
