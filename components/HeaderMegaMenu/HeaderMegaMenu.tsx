@@ -1,13 +1,4 @@
 "use client";
-// import {
-//   IconBook,
-//   IconChartPie3,
-//   IconChevronDown,
-//   IconCode,
-//   IconCoin,
-//   IconFingerprint,
-//   IconNotification,
-// } from "@tabler/icons-react";
 import {
   Anchor,
   Box,
@@ -22,6 +13,7 @@ import {
   HoverCard,
   ScrollArea,
   SimpleGrid,
+  Skeleton,
   Text,
   //   ThemeIcon,
   UnstyledButton,
@@ -34,6 +26,10 @@ import UserDropDown from "./Menu";
 import Cart from "./cart";
 import { LuChevronDown } from "react-icons/lu";
 import { InputWithButton } from "../InputWithButton";
+import { useEffect, useState } from "react";
+import { groq } from "next-sanity";
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
 
 const mockdata = [
   {
@@ -69,26 +65,53 @@ const mockdata = [
 ];
 
 export function HeaderMegaMenu() {
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [data, setData] = useState<any[]>([]);
+
+  useEffect(() => {
+    (async function () {
+      const product = await client.fetch(groq`*[_type=="categoriy"]`);
+      // setIsLoading(false);
+      product && setData(product);
+    })();
+  }, []);
+
+  // if (isLoading) {
+  //   return <Skeleton height={50} />;
+  // }
+
+  const mockdata = data.map((item) => {
+    return {
+      title: item.name,
+      id: item._id,
+      image: item?.images || "",
+    };
+  });
+  console.log(mockdata);
+
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
 
   const links = mockdata.map((item) => (
-    <UnstyledButton className={classes.subLink} key={item.title}>
+    <Link
+      href={`/collection/${item.id}`}
+      className={classes.subLink}
+      key={item.title}
+    >
       <Group wrap="nowrap" align="flex-start">
-        {/* <ThemeIcon size={34} variant="default" radius="md"> */}
-        {/* <item.icon size={22} color={theme.colors.blue[6]} /> */}
-        {/* </ThemeIcon> */}
-        <div>
+        <div className="flex items-center gap-4">
+          <img
+            src={urlFor(item.image).url()}
+            className="w-[70] h-[70] object-cover rounded-lg border"
+            alt={item.title}
+          />
           <Text size="sm" fw={500}>
             {item.title}
           </Text>
-          <Text size="xs" c="dimmed">
-            {item.description}
-          </Text>
         </div>
       </Group>
-    </UnstyledButton>
+    </Link>
   ));
 
   return (
@@ -101,9 +124,6 @@ export function HeaderMegaMenu() {
                 BlushBloom
               </Link>
               <Group h="100%" gap={24} visibleFrom="sm">
-                <a href="#" className={classes.link}>
-                  Home
-                </a>
                 <HoverCard
                   width={600}
                   position="bottom"
@@ -115,7 +135,7 @@ export function HeaderMegaMenu() {
                     <a href="#" className={classes.link}>
                       <Center inline>
                         <Box component="span" mr={5}>
-                          Features
+                          Categories
                         </Box>
                         <LuChevronDown color="blue" />
                       </Center>
@@ -124,7 +144,7 @@ export function HeaderMegaMenu() {
 
                   <HoverCard.Dropdown style={{ overflow: "hidden" }}>
                     <Group justify="space-between" px="md">
-                      <Text fw={500}>Features</Text>
+                      <Text fw={500}>Categories</Text>
                       <Anchor href="#" fz="xs">
                         View all
                       </Anchor>
@@ -135,15 +155,8 @@ export function HeaderMegaMenu() {
                     <SimpleGrid cols={2} spacing={0}>
                       {links}
                     </SimpleGrid>
-
                   </HoverCard.Dropdown>
                 </HoverCard>
-                <a href="#" className={classes.link}>
-                  Learn
-                </a>
-                <a href="#" className={classes.link}>
-                  Academy
-                </a>
               </Group>
             </div>
 
@@ -175,25 +188,14 @@ export function HeaderMegaMenu() {
       >
         <ScrollArea h="calc(100vh - 80px" mx="-md">
           <Divider my="sm" />
-
-          <a href="#" className={classes.link}>
-            Home
-          </a>
           <UnstyledButton className={classes.link} onClick={toggleLinks}>
             <Center inline>
               <Box component="span" mr={5}>
                 Features
               </Box>
-              {/* <IconChevronDown size={16} color={theme.colors.blue[6]} /> */}
             </Center>
           </UnstyledButton>
           <Collapse in={linksOpened}>{links}</Collapse>
-          <a href="#" className={classes.link}>
-            Learn
-          </a>
-          <a href="#" className={classes.link}>
-            Academy
-          </a>
 
           <Divider my="sm" />
 

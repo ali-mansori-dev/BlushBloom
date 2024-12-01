@@ -1,20 +1,20 @@
+import { urlFor } from "@/sanity/lib/image";
 import Link from "next/link";
 
-interface Props {
-  name: string;
-  slug: string;
-  media: { mainMedia: { thumbnail: { url: string } } };
-}
-export default function CategoryCard({ name, slug, media }: Props) {
+export default function CategoryCard({ category }: { category: any }) {
   return (
     <Link
-      href={`/c/${slug}`}
+      href={`/collection/${category?._id}`}
       className="flex flex-col items-center justify-center gap-4"
     >
       <div className="bg-gray-100 rounded-xl overflow-hidden">
-        <img src={media?.mainMedia?.thumbnail?.url} className="w-[90px] h-[90px] object-cover" alt={name} />
+        <img
+          src={urlFor(category?.images).url()}
+          className="w-[250px] h-[250px] object-cover"
+          alt={category?.name}
+        />
       </div>
-      <span className="text-lg">{name}</span>
+      <span className="text-lg">{category?.name}</span>
     </Link>
   );
 }

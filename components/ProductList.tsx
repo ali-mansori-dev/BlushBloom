@@ -1,20 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Grid, LoadingOverlay, Skeleton } from "@mantine/core";
+import React, { useEffect, useState } from "react";
+import { Grid, Skeleton } from "@mantine/core";
 import { FeaturesCard } from "./FeaturesCard/FeaturesCard";
-import { WixClientContext } from "@/context/wixContext";
+import { client } from "@/sanity/lib/client";
+import { groq } from "next-sanity";
 
 const ProductList = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<any[]>([]);
-  const myWixClient = useContext(WixClientContext);
 
   useEffect(() => {
     (async function () {
-      const { items } = await myWixClient.products.queryProducts().find();
+      const products = await client.fetch(groq`*[_type=="product"]`);
       setIsLoading(false);
-      setData(items);
+      products && setData(products);
     })();
-  }, [myWixClient]);
+  }, []);
 
   if (isLoading) {
     return <Skeleton height={50} />;
@@ -25,7 +25,7 @@ const ProductList = () => {
       <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 30 }}>
         {data?.map((item, index) => (
           <Grid.Col key={index} span={{ base: 12, xs: 3 }}>
-            <FeaturesCard {...item} />
+            <FeaturesCard product={item} />
           </Grid.Col>
         ))}
       </Grid>

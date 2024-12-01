@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { theme } from "@/theme";
+import "@mantine/core/styles.css";
 
 import "./globals.css";
-import "@mantine/core/styles.css";
 import { HeaderMegaMenu as Navbar } from "@/components/HeaderMegaMenu/HeaderMegaMenu";
 import { Footer } from "@/components/Footer";
-import { WixClientContextProvider } from "@/context/wixContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -27,15 +26,13 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <WixClientContextProvider>
-          <MantineProvider theme={theme}>
-            <Navbar />
-            <main className="min-h-[calc(100vh-524px)] py-12 mt-[66px]">
-              {children}
-            </main>
-            <Footer />
-          </MantineProvider>
-        </WixClientContextProvider>
+        <MantineProvider theme={theme}>
+          <Navbar />
+          <main className="min-h-[calc(100vh-524px)] py-12 mt-[66px]">
+            {children}
+          </main>
+          <Footer />
+        </MantineProvider>
       </body>
     </html>
   );

@@ -1,73 +1,53 @@
 import Link from "next/link";
-import { Badge, Button, Card, Group, Image, Text } from "@mantine/core";
+import { ActionIcon, Button, Card, Group, Image, Text } from "@mantine/core";
+import { urlFor } from "@/sanity/lib/image";
+import { LuPlus, LuStar } from "react-icons/lu";
 
-interface Props {
-  name: string;
-  slug: string;
-  price: {
-    formatted: {
-      price: string;
-    };
-  };
-  media: {
-    mainMedia: {
-      image: {
-        url: string;
-      };
-    };
-  };
-}
-
-export function FeaturesCard({ name, slug, price, media }: Props) {
+export function FeaturesCard({ product }: { product: any }) {
   return (
-    <Link href={`/${slug}`}>
+    <Link href={`/p/${product?.slug?.current}`}>
       <Card
         withBorder
         radius="md"
-        className={`bg-gray-50 border border-gray-300`}
+        className={`bg-white border border-gray-200`}
       >
         <Card.Section
-          className={
-            "flex items-center justify-center  border-b border-gray-300"
-          }
+          className={"flex items-center justify-center bg-white py-4"}
         >
           <Image
-            src={media.mainMedia.image.url}
-            alt="Tesla Model S"
-            className="h-[200px]"
+            src={urlFor(product?.images && product.images[0]).url()}
+            alt={product?.name}
+            className="h-[180px]"
           />
         </Card.Section>
 
         <Card.Section
-          className={`flex justify-between border-t border-gray-300 p-4`}
+          className={`flex flex-col gap-4 justify-between border-t border-gray-300 py-1 px-4`}
           mt="md"
         >
-          <div>
-            <Text fw={500}>{name}</Text>
+          <div className="w-full flex justify-between items-center">
+            <div className="flex gap-1 items-center">
+              <LuStar fill="#faaf00" color="#faaf00" />
+              <span className="text-xs">4.0</span>
+            </div>
+            <span className="text-sm">My</span>
           </div>
-          <Badge variant="outline">25% off</Badge>
+          <div className="w-full line-clamp-1">
+            <Text fw={400}>{product?.name}</Text>
+          </div>
         </Card.Section>
 
-        <Card.Section className={`border-t border-gray-300 p-4`}>
-          <Group gap={30}>
-            <div>
+        <Card.Section className={` p-4`}>
+          <Group gap={30} justify="space-between">
+            <div className="">
               <Text fz="lg" fw={700} style={{ lineHeight: 1 }}>
-                {price.formatted.price}
+                $ {product.price.toFixed(2)}
               </Text>
-              {/* <Text
-                fz="sm"
-                c="dimmed"
-                fw={500}
-                style={{ lineHeight: 1, textDecoration: "line-through" }}
-                mt={3}
-              >
-                $160.00
-              </Text> */}
             </div>
 
-            <Button radius="xl" style={{ flex: 1 }}>
-              Add to Cart
-            </Button>
+            <ActionIcon variant="outline" aria-label="Settings">
+              <LuPlus />
+            </ActionIcon>
           </Group>
         </Card.Section>
       </Card>
