@@ -1,32 +1,31 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Grid, LoadingOverlay, Skeleton } from "@mantine/core";
 import CategoryCard from "@/components/CategoryCard/index";
-import { WixClientContext } from "@/context/wixContext";
+import { client } from "@/sanity/lib/client";
+import { groq } from "next-sanity";
 
 const CategoryList = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<any[]>([]);
-  const wixClient = useContext(WixClientContext);
 
   useEffect(() => {
     (async function () {
-      const { items } = await wixClient.collections.queryCollections().find();
+      const product = await client.fetch(groq`*[_type=="categoriy"]`);
       setIsLoading(false);
-      setData(items);
-      console.log(items);
+      product && setData(product);
     })();
-  }, [wixClient]);
+  }, []);
 
   if (isLoading) {
-    return <Skeleton height={50}  />;
+    return <Skeleton height={50} />;
   }
 
   return (
     <div className="flex flex-col gap-6">
       <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 30 }}>
-        {data?.map((item, index) => (
+        {data?.map((category, index) => (
           <Grid.Col key={index} span={{ base: 12, xs: 3 }}>
-            <CategoryCard {...item} />
+            <CategoryCard category={category} />
           </Grid.Col>
         ))}
       </Grid>

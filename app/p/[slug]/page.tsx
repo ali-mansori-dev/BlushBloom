@@ -1,7 +1,5 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import { WixClientContext } from "@/context/wixContext";
-import { wixClientServer } from "@/lib/helper/wixClientServer";
 import {
   ActionIcon,
   Badge,
@@ -10,73 +8,81 @@ import {
   ColorSwatch,
   Container,
   Group,
+  Loader,
   Text,
 } from "@mantine/core";
-import { notFound } from "next/navigation";
 import { LuMinus, LuPlus, LuTrash } from "react-icons/lu";
-import { useRouter } from "next/router";
+import { groq } from "next-sanity";
+import { client } from "@/sanity/lib/client";
+import { useParams, useSearchParams } from "next/navigation";
+import { urlFor } from "@/sanity/lib/image";
 
 const Slug = () => {
-  const router = useRouter();
-  const { slug } = router.query;
+  const params = useParams();
+
+  const slug = params.slug;
+
+  // return (
+  //   <div>
+  //     <h1>Slug from Path: {slugFromPath}</h1>
+  //   </div>
+  // );
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<any>([]);
-  const myWixClient = useContext(WixClientContext);
 
   useEffect(() => {
-    console.log(slug);
-
     (async function () {
-      const { items } = await myWixClient.products
-        .queryProducts()
-        .eq("slug", slug)
-        .find();
+      const query = `*[_type == "product" && slug.current == $slug][0]{
+        name,
+        slug,
+        description,
+        price,
+        images
+      }`;
+      const params = { slug };
+
+      const product = await client.fetch(query, params);
       setIsLoading(false);
-      setData(items);
+      setData(product);
     })();
-  }, [myWixClient]);
+  }, []);
 
-  // const products = await wixClient.products
-  //   .queryProducts()
-  //   .eq("slug", "i-m-a-product-5")
-  //   .find();
-
-  // if (!products.items[0]) {
-  //   return notFound();
-  // }
-
-  // const product = products.items[0];
-  // console.log(product);
+  if (isLoading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <Loader type="dots" color="blue" />
+      </div>
+    );
+  }
 
   return (
     <Container size={"xl"} className="flex flex-col lg:flex-row gap-12">
       <div className="lg:w-2/5 flex flex-col gap-4">
         <img
-          src="https://i.imgur.com/ZL52Q2D.png"
-          className="lg:w-full h-[280px] object-cover border rounded-lg"
+          src={urlFor(data?.images && data.images[0]).url()}
+          className="lg:w-[380px] h-[380px] object-cover border rounded-lg"
         />
         <div className="w-full inline-flex gap-3">
-          <img
-            src="https://i.imgur.com/ZL52Q2D.png"
-            className="w-[90px] h-[90px] object-cover border rounded-lg"
-          />
-          <img
-            src="https://i.imgur.com/ZL52Q2D.png"
-            className="w-[90px] h-[90px] object-cover border rounded-lg"
-          />
+          {data?.images?.map((value: any, index: any) => {
+            return (
+              <img
+                src={urlFor(value).url()}
+                key={index}
+                className="w-[90px] h-[90px] object-cover border rounded-lg"
+              />
+            );
+          })}
         </div>
       </div>
       <div className="lg:w-3/5 flex flex-col gap-4">
-        <div className="text-xl font-bold">Testla S Model</div>
-        <p className="w-full text-sm text-gray-400 leading-7">
-          Note that polymorphic components props types are different from
-          regular components – they do not extend HTML element props of the
-          default element. For example, ColorSwatchProps does not extend
-          React.ComponentPropsWithoutRef
+        <div className="text-xl font-bold">{data?.name}</div>
+        <p className="w-full text-sm text-gray-400 leading-7 line-clamp-4">
+          {data?.description}
         </p>
         <div className="flex flex-row gap-4">
           <Text fz="xl" fw={700} style={{ lineHeight: 1 }}>
-            $168.00
+            $ {data.price.toFixed(2)}
           </Text>
           <Text
             fz="sm"
@@ -127,9 +133,13 @@ const Slug = () => {
               <LuPlus />
             </ActionIcon>
           </div>
-          {/* <Button className="rounded-full" loading loaderProps={{ type: "dots" }}>
+          <Button
+            className="rounded-full"
+            loading
+            loaderProps={{ type: "dots" }}
+          >
             Add to Cart
-          </Button> */}
+          </Button>
         </div>
         <hr />
         111
