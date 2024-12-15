@@ -1,18 +1,19 @@
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
-import React, { useContext, useEffect, useState } from "react";
-import { Grid, LoadingOverlay, Skeleton } from "@mantine/core";
-import { CategoryTableRow } from "@/types/CategoryTableRow";
 import CategoryCard from "@/components/CategoryCard/index";
+import { BrandTableRow } from "@/types/BrandTableRow";
+import React, { useEffect, useState } from "react";
 import Supabase from "@/lib/helper/ClientSupabase";
+import { Grid, Skeleton } from "@mantine/core";
 
-const CategoryList = () => {
+import BrandCard from "./BrandCard";
+
+const BrandsList = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [data, setData] =
-    useState<PostgrestSingleResponse<CategoryTableRow[]>>();
+  const [data, setData] = useState<PostgrestSingleResponse<BrandTableRow[]>>();
 
   useEffect(() => {
     (async function () {
-      const products = await Supabase.from("bb_categories")
+      const products = await Supabase.from("bb_brands")
         .select("*")
         .order("created_at", { ascending: false });
       setIsLoading(false);
@@ -27,9 +28,9 @@ const CategoryList = () => {
   return (
     <div className="flex flex-col gap-6">
       <Grid gutter={{ base: 20, xs: "md", md: "xl", xl: 30 }}>
-        {data?.data?.map((category, index) => (
-          <Grid.Col key={index} span={{ base: 6, xs: 3 }}>
-            <CategoryCard category={category} />
+        {data?.data?.map((brand, index) => (
+          <Grid.Col key={index} span={{ base: 4, xs: 3 }}>
+            <BrandCard brand={brand} />
           </Grid.Col>
         ))}
       </Grid>
@@ -37,4 +38,4 @@ const CategoryList = () => {
   );
 };
 
-export default CategoryList;
+export default BrandsList;

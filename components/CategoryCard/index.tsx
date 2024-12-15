@@ -1,16 +1,16 @@
-import { urlFor } from "@/sanity/lib/image";
+import { CategoryTableRow } from "@/types/CategoryTableRow";
 import Link from "next/link";
 
-export default function CategoryCard({ category }: { category: any }) {
+export default function CategoryCard({ category }: { category: CategoryTableRow }) {
   return (
     <Link
-      href={`/collection/${category?._id}`}
-      className="flex flex-col items-center justify-center gap-4"
+      href={`/collection/${category?.id}`}
+      className="flex flex-col items-center justify-center gap-1"
     >
       <div className="bg-gray-100 rounded-xl overflow-hidden">
         <img
-          src={urlFor(category?.images).url()}
-          className="w-[250px] h-[250px] object-cover"
+          src={`https://fwpdokjfwfokcqrgoanf.supabase.co/storage/v1/object/public/images/BlushBloom/${category.image}`}
+          className="w-[200px] h-[200px] object-cover"
           alt={category?.name}
         />
       </div>

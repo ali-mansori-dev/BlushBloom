@@ -1,118 +1,34 @@
 "use client";
 import {
+  UnstyledButton,
+  ScrollArea,
+  Container,
+  HoverCard,
+  Collapse,
+  Divider,
   Anchor,
-  Box,
   Burger,
   Button,
   Center,
-  Collapse,
-  Container,
-  Divider,
   Drawer,
   Group,
-  HoverCard,
-  ScrollArea,
-  SimpleGrid,
-  Skeleton,
   Text,
-  //   ThemeIcon,
-  UnstyledButton,
+  Box,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-// import { MantineLogo } from "@mantinex/mantine-logo";
-import classes from "./HeaderMegaMenu.module.css";
+import { LuChevronDown } from "react-icons/lu";
 import Link from "next/link";
+
+import { InputWithButton } from "../InputWithButton";
+import classes from "./HeaderMegaMenu.module.css";
+import CategoryContent from "./CategoryContent";
 import UserDropDown from "./Menu";
 import Cart from "./cart";
-import { LuChevronDown } from "react-icons/lu";
-import { InputWithButton } from "../InputWithButton";
-import { useEffect, useState } from "react";
-import { groq } from "next-sanity";
-import { client } from "@/sanity/lib/client";
-import { urlFor } from "@/sanity/lib/image";
-
-const mockdata = [
-  {
-    // icon: IconCode,
-    title: "Open source",
-    description: "This Pokémon’s cry is very loud and distracting",
-  },
-  {
-    // icon: IconCoin,
-    title: "Free for everyone",
-    description: "The fluid of Smeargle’s tail secretions changes",
-  },
-  {
-    // icon: IconBook,
-    title: "Documentation",
-    description: "Yanma is capable of seeing 360 degrees without",
-  },
-  {
-    // icon: IconFingerprint,
-    title: "Hair Cair",
-    description: "The shell’s rounded shape and the grooves on its.",
-  },
-  {
-    // icon: IconChartPie3,
-    title: "Skin Care",
-    description: "This Pokémon uses its flying ability to quickly chase",
-  },
-  {
-    // icon: IconNotification,
-    title: "Notifications",
-    description: "Combusken battles with the intensely hot flames it spews",
-  },
-];
 
 export function HeaderMegaMenu() {
-  // const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [data, setData] = useState<any[]>([]);
-
-  useEffect(() => {
-    (async function () {
-      const product = await client.fetch(groq`*[_type=="categoriy"]`);
-      // setIsLoading(false);
-      product && setData(product);
-    })();
-  }, []);
-
-  // if (isLoading) {
-  //   return <Skeleton height={50} />;
-  // }
-
-  const mockdata = data.map((item) => {
-    return {
-      title: item.name,
-      id: item._id,
-      image: item?.images || "",
-    };
-  });
-  console.log(mockdata);
-
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
-
-  const links = mockdata.map((item) => (
-    <Link
-      href={`/collection/${item.id}`}
-      className={classes.subLink}
-      key={item.title}
-    >
-      <Group wrap="nowrap" align="flex-start">
-        <div className="flex items-center gap-4">
-          <img
-            src={urlFor(item.image).url()}
-            className="w-[70] h-[70] object-cover rounded-lg border"
-            alt={item.title}
-          />
-          <Text size="sm" fw={500}>
-            {item.title}
-          </Text>
-        </div>
-      </Group>
-    </Link>
-  ));
 
   return (
     <Box pos={"fixed"} top={0} left={0} right={0} bg={"#fff"} className="z-50">
@@ -149,12 +65,9 @@ export function HeaderMegaMenu() {
                         View all
                       </Anchor>
                     </Group>
-
                     <Divider my="sm" />
-
-                    <SimpleGrid cols={2} spacing={0}>
-                      {links}
-                    </SimpleGrid>
+                    12131
+                    <CategoryContent linksOpened={linksOpened} />
                   </HoverCard.Dropdown>
                 </HoverCard>
               </Group>
@@ -195,10 +108,9 @@ export function HeaderMegaMenu() {
               </Box>
             </Center>
           </UnstyledButton>
-          <Collapse in={linksOpened}>{links}</Collapse>
-
           <Divider my="sm" />
-
+          111
+          <CategoryContent linksOpened={linksOpened} />
           <Group justify="center" grow pb="xl" px="md">
             <Button variant="default">Log in</Button>
             <Button>Sign up</Button>
