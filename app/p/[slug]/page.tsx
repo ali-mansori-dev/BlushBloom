@@ -12,39 +12,28 @@ import {
   Text,
 } from "@mantine/core";
 import { LuMinus, LuPlus, LuTrash } from "react-icons/lu";
-import { groq } from "next-sanity";
-import { client } from "@/sanity/lib/client";
 import { useParams, useSearchParams } from "next/navigation";
-import { urlFor } from "@/sanity/lib/image";
+import { ProductsTableRow } from "@/types/ProductsTableRow";
+import { PostgrestSingleResponse } from "@supabase/supabase-js";
+import Supabase from "@/lib/helper/ClientSupabase";
 
 const Slug = () => {
   const params = useParams();
 
   const slug = params.slug;
 
-  // return (
-  //   <div>
-  //     <h1>Slug from Path: {slugFromPath}</h1>
-  //   </div>
-  // );
-
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [data, setData] = useState<any>([]);
+  const [data, setData] =
+    useState<PostgrestSingleResponse<ProductsTableRow[]>>();
 
   useEffect(() => {
     (async function () {
-      const query = `*[_type == "product" && slug.current == $slug][0]{
-        name,
-        slug,
-        description,
-        price,
-        images
-      }`;
-      const params = { slug };
-
-      const product = await client.fetch(query, params);
+      const products = await Supabase.from("bb_products")
+        .select("*")
+        .eq("slug", slug)
+        .order("created_at", { ascending: false });
       setIsLoading(false);
-      setData(product);
+      products && setData(products);
     })();
   }, []);
 
@@ -60,29 +49,34 @@ const Slug = () => {
     <Container size={"xl"} className="flex flex-col lg:flex-row gap-12">
       <div className="lg:w-2/5 flex flex-col gap-4">
         <img
-          src={urlFor(data?.images && data.images[0]).url()}
+          src={`https://fwpdokjfwfokcqrgoanf.supabase.co/storage/v1/object/public/images/BlushBloom/${
+            data?.data && data?.data[0]?.images[0]
+          }`}
           className="lg:w-[380px] h-[380px] object-cover border rounded-lg"
         />
         <div className="w-full inline-flex gap-3">
-          {data?.images?.map((value: any, index: any) => {
-            return (
-              <img
-                src={urlFor(value).url()}
-                key={index}
-                className="w-[90px] h-[90px] object-cover border rounded-lg"
-              />
-            );
-          })}
+          {data?.data &&
+            data?.data[0]?.images?.map((value: any, index: any) => {
+              return (
+                <img
+                  src={`https://fwpdokjfwfokcqrgoanf.supabase.co/storage/v1/object/public/images/BlushBloom/${value}`}
+                  key={index}
+                  className="w-[90px] h-[90px] object-cover border rounded-lg"
+                />
+              );
+            })}
         </div>
       </div>
       <div className="lg:w-3/5 flex flex-col gap-4">
-        <div className="text-xl font-bold">{data?.name}</div>
+        <div className="text-xl font-bold">
+          {data?.data && data?.data[0]?.name}
+        </div>
         <p className="w-full text-sm text-gray-400 leading-7 line-clamp-4">
-          {data?.description}
+          {data?.data && data?.data[0]?.description}
         </p>
         <div className="flex flex-row gap-4">
           <Text fz="xl" fw={700} style={{ lineHeight: 1 }}>
-            $ {data.price.toFixed(2)}
+            $ {data?.data && data?.data[0]?.price.toFixed(2)}
           </Text>
           <Text
             fz="sm"
@@ -142,7 +136,6 @@ const Slug = () => {
           </Button>
         </div>
         <hr />
-        111
       </div>
     </Container>
   );

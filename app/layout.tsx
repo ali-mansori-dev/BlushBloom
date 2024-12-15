@@ -4,7 +4,7 @@ import { theme } from "@/theme";
 import "@mantine/core/styles.css";
 
 import "./globals.css";
-import { HeaderMegaMenu as Navbar } from "@/components/HeaderMegaMenu/HeaderMegaMenu";
+import { HeaderMegaMenu as Navbar } from "@/components/HeaderMegaMenu";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {

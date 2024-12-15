@@ -1,11 +1,11 @@
-import Link from "next/link";
-import { ActionIcon, Button, Card, Group, Image, Text } from "@mantine/core";
-import { urlFor } from "@/sanity/lib/image";
+import { ActionIcon, Card, Group, Image, Text } from "@mantine/core";
+import { ProductsTableRow } from "@/types/ProductsTableRow";
 import { LuPlus, LuStar } from "react-icons/lu";
+import Link from "next/link";
 
-export function FeaturesCard({ product }: { product: any }) {
+export function FeaturesCard({ product }: { product: ProductsTableRow }) {
   return (
-    <Link href={`/p/${product?.slug?.current}`}>
+    <Link href={`/p/${product?.slug}`}>
       <Card
         withBorder
         radius="md"
@@ -15,7 +15,7 @@ export function FeaturesCard({ product }: { product: any }) {
           className={"flex items-center justify-center bg-white py-4"}
         >
           <Image
-            src={urlFor(product?.images && product.images[0]).url()}
+            src={`https://fwpdokjfwfokcqrgoanf.supabase.co/storage/v1/object/public/images/BlushBloom/${product.images[0]}`}
             alt={product?.name}
             className="h-[180px]"
           />
