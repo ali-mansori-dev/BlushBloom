@@ -1,11 +1,19 @@
+import { open_auth_modal } from "@/Features/Layout/layoutSlice";
 import Supabase from "@/lib/helper/ClientSupabase";
 import { Menu, rem, ActionIcon } from "@mantine/core";
 import { UserResponse } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { LuUser, LuLayoutDashboard, LuLogOut } from "react-icons/lu";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 export default function UserDropDown() {
   const [user, setUser] = useState<UserResponse>();
+  const dispatch = useDispatch();
+
+  const is_authed = useSelector((state: any) => state.auth.is_authed);
+
+  const open_auth_modal_handle = () => dispatch(open_auth_modal());
 
   useEffect(() => {
     (async function () {
@@ -14,7 +22,7 @@ export default function UserDropDown() {
     })();
   }, []);
 
-  return (
+  return is_authed ? (
     <Menu shadow="md">
       <Menu.Target>
         <ActionIcon
@@ -36,7 +44,9 @@ export default function UserDropDown() {
             <span className="text-base font-bold">
               {user?.data?.user?.user_metadata?.full_name}
             </span>
-            <span className="text-sm text-gray-500">{user?.data?.user?.email}</span>
+            <span className="text-sm text-gray-500">
+              {user?.data?.user?.email}
+            </span>
           </div>
         </Menu.Item>
         <Menu.Divider />
@@ -48,5 +58,14 @@ export default function UserDropDown() {
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>
+  ) : (
+    <ActionIcon
+      onClick={open_auth_modal_handle}
+      variant="default"
+      size="xl"
+      aria-label="Toggle color scheme"
+    >
+      <LuUser />
+    </ActionIcon>
   );
 }
