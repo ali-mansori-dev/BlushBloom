@@ -39,7 +39,7 @@ const Slug = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full h-full flex items-center justify-center">
+      <div className="w-full h-full flex items-center justify-center py-8">
         <Loader type="dots" color="blue" />
       </div>
     );
@@ -127,13 +127,6 @@ const Slug = () => {
               <LuPlus />
             </ActionIcon>
           </div>
-          <Button
-            className="rounded-full"
-            loading
-            loaderProps={{ type: "dots" }}
-          >
-            Add to Cart
-          </Button>
         </div>
         <hr />
       </div>

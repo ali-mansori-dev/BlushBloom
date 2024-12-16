@@ -4,8 +4,9 @@ import { theme } from "@/theme";
 import "@mantine/core/styles.css";
 
 import "./globals.css";
-import { HeaderMegaMenu as Navbar } from "@/components/HeaderMegaMenu";
+import { HeaderMegaMenu as Navbar } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import AuthModal from "@/components/AuthModal";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -30,6 +31,7 @@ export default function RootLayout({
           <Navbar />
           <main className="min-h-[calc(100vh-524px)] py-12 mt-[66px]">
             {children}
+            <AuthModal />
           </main>
           <Footer />
         </MantineProvider>
