@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function BrandCard({ brand }: { brand: BrandTableRow }) {
   return (
     <Link
-      href={`/collection/${brand?.id}`}
+      href={`/collection/brand/${brand?.id}`}
       className="flex flex-col items-center justify-center gap-1"
     >
       <div className="bg-gray-100 rounded-xl overflow-hidden">

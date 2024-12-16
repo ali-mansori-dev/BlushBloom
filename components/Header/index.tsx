@@ -39,7 +39,7 @@ export function HeaderMegaMenu() {
               <Link className="text-xl font-bold" href={`/`}>
                 BlushBloom
               </Link>
-              <Group h="100%" gap={24} visibleFrom="sm">
+              {/* <Group h="100%" gap={24} visibleFrom="sm">
                 <HoverCard
                   width={600}
                   position="bottom"
@@ -70,10 +70,10 @@ export function HeaderMegaMenu() {
                     <CategoryContent linksOpened={linksOpened} />
                   </HoverCard.Dropdown>
                 </HoverCard>
-              </Group>
+              </Group> */}
             </div>
 
-            <div className="w-[380px] hidden md:block">
+            <div className="w-[430px] hidden md:block">
               <InputWithButton />
             </div>
             <Group visibleFrom="sm">
