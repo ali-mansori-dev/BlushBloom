@@ -109,7 +109,6 @@ export function HeaderMegaMenu() {
             </Center>
           </UnstyledButton>
           <Divider my="sm" />
-          111
           <CategoryContent linksOpened={linksOpened} />
           <Group justify="center" grow pb="xl" px="md">
             <Button variant="default">Log in</Button>
