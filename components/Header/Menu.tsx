@@ -1,3 +1,4 @@
+import { log_out } from "@/Features/Auth/authSlice";
 import { open_auth_modal } from "@/Features/Layout/layoutSlice";
 import Supabase from "@/lib/helper/ClientSupabase";
 import { Menu, rem, ActionIcon } from "@mantine/core";
@@ -14,6 +15,10 @@ export default function UserDropDown() {
   const is_authed = useSelector((state: any) => state.auth.is_authed);
 
   const open_auth_modal_handle = () => dispatch(open_auth_modal());
+  const logout_handle = async () => {
+    await Supabase.auth.signOut();
+    dispatch(log_out());
+  };
 
   useEffect(() => {
     (async function () {
@@ -40,7 +45,7 @@ export default function UserDropDown() {
             <LuLayoutDashboard style={{ width: rem(14), height: rem(14) }} />
           }
         >
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-0">
             <span className="text-base font-bold">
               {user?.data?.user?.user_metadata?.full_name}
             </span>
@@ -51,6 +56,7 @@ export default function UserDropDown() {
         </Menu.Item>
         <Menu.Divider />
         <Menu.Item
+          onClick={logout_handle}
           color="red"
           leftSection={<LuLogOut style={{ width: rem(14), height: rem(14) }} />}
         >
