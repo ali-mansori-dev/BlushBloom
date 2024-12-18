@@ -1,5 +1,6 @@
 import {
   ActionIcon,
+  Badge,
   Card,
   ColorSwatch,
   Group,
@@ -12,7 +13,13 @@ import CartService from "@/Sevices/cartServices";
 import { LuMinus, LuPlus, LuTrash } from "react-icons/lu";
 import { CartItem } from "./CartItem";
 
-export function CardItemComponent({ card }: { card: CartItem }) {
+export function CardItemComponent({
+  card,
+  actions = true,
+}: {
+  card: CartItem;
+  actions?: boolean;
+}) {
   const dispatch = useDispatch();
   const cartService = new CartService(dispatch);
   // actions
@@ -40,27 +47,28 @@ export function CardItemComponent({ card }: { card: CartItem }) {
             <Text size="lg" c="dimmed">
               $ {card?.price}
             </Text>
-            {card?.color?.value && (
-              <ColorSwatch color={`${card?.color?.value}`} />
-            )}
+            {card?.color && <ColorSwatch color={`${card?.color}`} />}
+            {card?.size && <Badge>{card?.size}</Badge>}
           </div>
-          <Group wrap="nowrap" gap="xs">
-            <div className="inline-flex items-center gap-2">
-              {card?.quantity > 1 ? (
-                <ActionIcon onClick={decreasToCart} size={"lg"}>
-                  <LuMinus />
+          {actions && (
+            <Group wrap="nowrap" gap="xs">
+              <div className="inline-flex items-center gap-2">
+                {card?.quantity > 1 ? (
+                  <ActionIcon onClick={decreasToCart} size={"lg"}>
+                    <LuMinus />
+                  </ActionIcon>
+                ) : (
+                  <ActionIcon onClick={deleteToCart} size={"lg"}>
+                    <LuTrash />
+                  </ActionIcon>
+                )}
+                <p className="w-[28px] text-center">{card?.quantity}</p>
+                <ActionIcon onClick={increaseToCart} size={"lg"}>
+                  <LuPlus />
                 </ActionIcon>
-              ) : (
-                <ActionIcon onClick={deleteToCart} size={"lg"}>
-                  <LuTrash />
-                </ActionIcon>
-              )}
-              <p className="w-[28px] text-center">{card?.quantity}</p>
-              <ActionIcon onClick={increaseToCart} size={"lg"}>
-                <LuPlus />
-              </ActionIcon>
-            </div>
-          </Group>
+              </div>
+            </Group>
+          )}
         </div>
       </Group>
     </Card>

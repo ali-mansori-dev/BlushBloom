@@ -7,6 +7,6 @@ export interface CartItem {
   price?: number;
   quantity: number;
   image_url: string;
-  color?: OptionType;
-  size?: OptionType;
+  color?: string;
+  size?: string;
 }
