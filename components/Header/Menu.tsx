@@ -23,7 +23,6 @@ export default function UserDropDown() {
   useEffect(() => {
     (async function () {
       setUser(await Supabase.auth.getUser());
-      console.log(await Supabase.auth.getUser());
     })();
   }, []);
 

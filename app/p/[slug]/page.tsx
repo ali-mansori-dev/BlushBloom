@@ -1,9 +1,8 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  ActionIcon,
-  Badge,
   Button,
+  CheckIcon,
   Chip,
   ColorSwatch,
   Container,
@@ -11,20 +10,65 @@ import {
   Loader,
   Text,
 } from "@mantine/core";
-import { LuMinus, LuPlus, LuTrash } from "react-icons/lu";
-import { useParams, useSearchParams } from "next/navigation";
-import { ProductsTableRow } from "@/types/ProductsTableRow";
-import { PostgrestSingleResponse } from "@supabase/supabase-js";
+import { useParams } from "next/navigation";
+import { OptionType, ProductsTableRow } from "@/types/ProductsTableRow";
 import Supabase from "@/lib/helper/ClientSupabase";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import CartService from "@/Sevices/cartServices";
+import Link from "next/link";
+
+interface CartItem {
+  id: string;
+  name: string;
+  price?: number;
+  quantity: number;
+  image_url: string;
+  color?: OptionType;
+  size?: OptionType;
+}
 
 const Slug = () => {
+  // page params
   const params = useParams();
-
   const slug = params.slug;
+  const dispatch = useDispatch();
+  const cartService = new CartService(dispatch);
 
+  // states
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [data, setData] =
-    useState<PostgrestSingleResponse<ProductsTableRow[]>>();
+  const [data, setData] = useState<ProductsTableRow>();
+  const [color, setColor] = useState<OptionType>();
+  const [size, setSize] = useState<OptionType>();
+  const [cartItems, setCartItems] = useState<CartItem>();
+
+  const carts = useSelector((state: any) => state.cart.items);
+
+  useEffect(() => {
+    console.log(carts, data);
+    if (data && carts) {
+      const item = carts.find((item: any) => item.product_id === data?.id);
+      item?.id && setCartItems(item);
+    }
+  }, [carts, data]);
+
+  const handleAddToCart = (e: any) => {
+    e.preventDefault(); // Prevent navigation when clicking the button
+    cartService.addItem({
+      color,
+      size,
+      image_url: `${data?.images[0]}`,
+      product_id: `${data?.id}`,
+      name: `${data?.name}`,
+      price: data?.price,
+      quantity: 1,
+    });
+  };
+
+  const handleRemoveFromCart = () => {
+    cartService.removeItem(`${cartItems?.id}`);
+    setCartItems(undefined);
+  };
 
   useEffect(() => {
     (async function () {
@@ -33,13 +77,17 @@ const Slug = () => {
         .eq("slug", slug)
         .order("created_at", { ascending: false });
       setIsLoading(false);
-      products && setData(products);
+      products?.data && products?.data?.length > 0 && setData(products.data[0]);
     })();
   }, []);
 
+  useEffect(() => {
+    !color && data?.colors?.length && setColor(data?.colors[0]);
+  }, [data]);
+
   if (isLoading) {
     return (
-      <div className="w-full h-full flex items-center justify-center py-8">
+      <div className="w-full h-full flex items-center justify-center py-28">
         <Loader type="dots" color="blue" />
       </div>
     );
@@ -47,16 +95,16 @@ const Slug = () => {
 
   return (
     <Container size={"xl"} className="flex flex-col lg:flex-row gap-12">
-      <div className="lg:w-2/5 flex flex-col gap-4">
+      <div className="lg:w-[380px] flex flex-col gap-4">
         <img
           src={`https://fwpdokjfwfokcqrgoanf.supabase.co/storage/v1/object/public/images/BlushBloom/${
-            data?.data && data?.data[0]?.images[0]
+            data && data?.images[0]
           }`}
           className="lg:w-[380px] h-[380px] object-cover border rounded-lg"
         />
         <div className="w-full inline-flex gap-3">
-          {data?.data &&
-            data?.data[0]?.images?.map((value: any, index: any) => {
+          {data &&
+            data?.images?.map((value: any, index: any) => {
               return (
                 <img
                   src={`https://fwpdokjfwfokcqrgoanf.supabase.co/storage/v1/object/public/images/BlushBloom/${value}`}
@@ -67,68 +115,78 @@ const Slug = () => {
             })}
         </div>
       </div>
-      <div className="lg:w-3/5 flex flex-col gap-4">
-        <div className="text-xl font-bold">
-          {data?.data && data?.data[0]?.name}
-        </div>
+      <div className="lg:w-2/4 flex flex-col gap-4">
+        <div className="text-xl font-bold">{data && data?.name}</div>
         <p className="w-full text-sm text-gray-400 leading-7 line-clamp-4">
-          {data?.data && data?.data[0]?.description}
+          {data && data?.description}
         </p>
         <div className="flex flex-row gap-4">
           <Text fz="xl" fw={700} style={{ lineHeight: 1 }}>
-            $ {data?.data && data?.data[0]?.price.toFixed(2)}
+            $ {data && data?.price.toFixed(2)}
           </Text>
-          <Text
-            fz="sm"
-            c="dimmed"
-            fw={500}
-            style={{ lineHeight: 1, textDecoration: "line-through" }}
-            mt={3}
-          >
-            $160.00
-          </Text>
-          <Badge variant="outline">25% off</Badge>
         </div>
         <hr />
-        <div className="">Choose Color</div>
-        <Group>
-          <ColorSwatch color="#009790" />
-          <ColorSwatch
-            color="rgba(234, 22, 174)"
-            className="outline outline-2 outline-gray-700 outline-offset-4"
-          />
-          <ColorSwatch color="var(--mantine-color-orange-5)" />
-        </Group>
-        <div className="">Choose size</div>
-        <Group>
-          <Chip variant="outline" value="first">
-            First
-          </Chip>
-          <Chip variant="outline" value="first">
-            First
-          </Chip>
-          <Chip variant="outline" value="first">
-            First
-          </Chip>
-        </Group>
-        <div className="w-full inline-flex justify-between">
-          <Button className="rounded-full" size="md">
+
+        {data?.colors?.length ? (
+          <div className="flex flex-col gap-2 items-start">
+            <div className="">Choose Color</div>
+            <Group>
+              {data?.colors?.map((value, index) => (
+                <ColorSwatch
+                  key={index}
+                  onClick={() => setColor(value)}
+                  color={value?.value}
+                  className={`${
+                    color?.code === value?.code && `outline outline-gray-500`
+                  }`}
+                >
+                  {color?.code === value?.code && (
+                    <CheckIcon size={12} color="gray" />
+                  )}
+                </ColorSwatch>
+              ))}
+            </Group>
+          </div>
+        ) : (
+          ""
+        )}
+        {data?.sizes?.length ? (
+          <div className="flex flex-col gap-2 items-start">
+            <div className="">Choose size</div>
+            <Group>
+              {data?.sizes?.map((value) => (
+                <Chip key={value.code} variant="outline" value="first">
+                  {value?.value}
+                </Chip>
+              ))}
+            </Group>
+          </div>
+        ) : (
+          ""
+        )}
+      </div>
+      <div className="lg:w-1/4 border border-gray-200 py-4 px-4 rounded-lg">
+        {cartItems?.id ? (
+          <div className="flex flex-col gap-2">
+            <Link href={`/cart`}>
+              <Button fullWidth variant="" size="sm">
+                Checkout
+              </Button>
+            </Link>
+            <Button
+              fullWidth
+              variant="outline"
+              size="sm"
+              onClick={handleRemoveFromCart}
+            >
+              Remove from Cart
+            </Button>
+          </div>
+        ) : (
+          <Button fullWidth size="sm" onClick={handleAddToCart}>
             Add to Cart
           </Button>
-          <div className="inline-flex items-center gap-2">
-            <ActionIcon size={"lg"}>
-              <LuTrash />
-            </ActionIcon>
-            <ActionIcon size={"lg"}>
-              <LuMinus />
-            </ActionIcon>
-            <p className="w-[28px] text-center">{1}</p>
-            <ActionIcon size={"lg"}>
-              <LuPlus />
-            </ActionIcon>
-          </div>
-        </div>
-        <hr />
+        )}
       </div>
     </Container>
   );
