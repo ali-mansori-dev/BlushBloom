@@ -22,7 +22,7 @@ class CartService {
       .insert({
         product_id: item?.product_id,
         size: item?.size,
-        color: item?.color?.value,
+        color: item?.color,
         quantity: 1,
       })
       .select();
