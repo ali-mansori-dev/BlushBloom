@@ -1,9 +1,45 @@
 import { ActionIcon, Card, Group, Image, Text } from "@mantine/core";
 import { ProductsTableRow } from "@/types/ProductsTableRow";
-import { LuPlus, LuStar } from "react-icons/lu";
+import { LuPlus, LuStar, LuTrash } from "react-icons/lu";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import CartService from "@/Sevices/cartServices";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { CartItem } from "../Cart/CartItem";
 
 export function FeaturesCard({ product }: { product: ProductsTableRow }) {
+  const dispatch = useDispatch();
+  const cartService = new CartService(dispatch);
+
+  const [cartItems, setCartItems] = useState<CartItem>();
+
+  const carts = useSelector((state: any) => state.cart.items);
+
+  useEffect(() => {
+    const item = carts.find((item: any) => item.product_id === product?.id);
+    item?.id && setCartItems(item);
+  }, [carts]);
+
+  const handleAddToCart = (e: any) => {
+    e.preventDefault(); // Prevent navigation when clicking the button
+    cartService.addItem({
+      color: product?.colors[0],
+      size: product?.sizes[0],
+      image_url: `${product?.images[0]}`,
+      product_id: `${product?.id}`,
+      name: `${product?.name}`,
+      price: product?.price,
+      quantity: 1,
+    });
+  };
+
+  const handleRemoveFromCart = (e: any) => {
+    e.preventDefault();
+    cartService.removeItem(`${cartItems?.id}`);
+    setCartItems(undefined);
+  };
+
   return (
     <Link href={`/p/${product?.slug}`}>
       <Card
@@ -45,9 +81,23 @@ export function FeaturesCard({ product }: { product: ProductsTableRow }) {
               </Text>
             </div>
 
-            <ActionIcon variant="outline" aria-label="Settings">
-              <LuPlus />
-            </ActionIcon>
+            {cartItems?.product_id ? (
+              <ActionIcon
+                variant="filled"
+                aria-label="Settings"
+                onClick={handleRemoveFromCart}
+              >
+                <LuTrash />
+              </ActionIcon>
+            ) : (
+              <ActionIcon
+                variant="outline"
+                aria-label="Settings"
+                onClick={handleAddToCart}
+              >
+                <LuPlus />
+              </ActionIcon>
+            )}
           </Group>
         </Card.Section>
       </Card>

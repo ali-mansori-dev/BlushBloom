@@ -24,11 +24,47 @@ import classes from "./HeaderMegaMenu.module.css";
 import CategoryContent from "./CategoryContent";
 import UserDropDown from "./Menu";
 import Cart from "./cart";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import Supabase from "@/lib/helper/ClientSupabase";
+import { add_to_cart } from "@/Features/Cart/cartSlice";
 
 export function HeaderMegaMenu() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
+
+  const dispatch = useDispatch();
+
+  //   {
+  //   price?: number;
+  // }
+
+  useEffect(() => {
+    (async function () {
+      const user = await Supabase.auth.getUser();
+      if (user) {
+        const user_id = user.data.user?.id;
+        const { data } = await Supabase.rpc("get_cart_with_product_details", {
+          user_uuid: user_id,
+        });
+        data.map((value: any) => {
+          dispatch(
+            add_to_cart({
+              id: value.cart_id,
+              color: value.color,
+              size: value.size,
+              name: value.product_name,
+              image_url: value.product_images[0],
+              quantity: value.quantity,
+              product_id: value.product_id,
+              price: value.product_price.toFixed(2),
+            })
+          );
+        });
+      }
+    })();
+  }, []);
 
   return (
     <Box pos={"fixed"} top={0} left={0} right={0} bg={"#fff"} className="z-50">

@@ -1,5 +1,6 @@
 .card {
   background-color: var(--mantine-color-body);
+  padding: 10px 12px;
 }
 
 .title {
@@ -8,8 +9,12 @@
     Greycliff CF,
     var(--mantine-font-family);
   line-height: 1.2;
+  margin: 0px;
 }
 
 .body {
-  padding: var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
 }
