@@ -55,8 +55,8 @@ const Slug = () => {
   const handleAddToCart = (e: any) => {
     e.preventDefault(); // Prevent navigation when clicking the button
     cartService.addItem({
-      color,
-      size,
+      color: color?.value,
+      size: size?.value,
       image_url: `${data?.images[0]}`,
       product_id: `${data?.id}`,
       name: `${data?.name}`,

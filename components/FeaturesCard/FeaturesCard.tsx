@@ -24,8 +24,8 @@ export function FeaturesCard({ product }: { product: ProductsTableRow }) {
   const handleAddToCart = (e: any) => {
     e.preventDefault(); // Prevent navigation when clicking the button
     cartService.addItem({
-      color: product?.colors[0],
-      size: product?.sizes[0],
+      color: product?.colors[0]?.value,
+      size: product?.sizes[0]?.value,
       image_url: `${product?.images[0]}`,
       product_id: `${product?.id}`,
       name: `${product?.name}`,
