@@ -11,6 +11,7 @@ import { CartItem } from "../Cart/CartItem";
 export function FeaturesCard({ product }: { product: ProductsTableRow }) {
   const dispatch = useDispatch();
   const cartService = new CartService(dispatch);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [cartItems, setCartItems] = useState<CartItem>();
 
@@ -21,9 +22,10 @@ export function FeaturesCard({ product }: { product: ProductsTableRow }) {
     item?.id && setCartItems(item);
   }, [carts]);
 
-  const handleAddToCart = (e: any) => {
+  const handleAddToCart = async (e: any) => {
+    setLoading(true);
     e.preventDefault(); // Prevent navigation when clicking the button
-    cartService.addItem({
+    await cartService.addItem({
       color: product?.colors[0]?.value,
       size: product?.sizes[0]?.value,
       image_url: `${product?.images[0]}`,
@@ -32,12 +34,15 @@ export function FeaturesCard({ product }: { product: ProductsTableRow }) {
       price: product?.price,
       quantity: 1,
     });
+    setLoading(false);
   };
 
-  const handleRemoveFromCart = (e: any) => {
+  const handleRemoveFromCart = async (e: any) => {
+    setLoading(true);
     e.preventDefault();
-    cartService.removeItem(`${cartItems?.id}`);
+    await cartService.removeItem(`${cartItems?.id}`);
     setCartItems(undefined);
+    setLoading(false);
   };
 
   return (
@@ -85,6 +90,8 @@ export function FeaturesCard({ product }: { product: ProductsTableRow }) {
               <ActionIcon
                 variant="filled"
                 aria-label="Settings"
+                loading={loading}
+                loaderProps={{ type: "dots" }}
                 onClick={handleRemoveFromCart}
               >
                 <LuTrash />
@@ -93,6 +100,8 @@ export function FeaturesCard({ product }: { product: ProductsTableRow }) {
               <ActionIcon
                 variant="outline"
                 aria-label="Settings"
+                loading={loading}
+                loaderProps={{ type: "dots" }}
                 onClick={handleAddToCart}
               >
                 <LuPlus />

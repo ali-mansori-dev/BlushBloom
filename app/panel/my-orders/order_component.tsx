@@ -21,7 +21,7 @@ const OrderComponent = ({ data }: { data: OrderType }) => {
           {data.status == 1 && <Badge color="yellow">Not Paid</Badge>}
           {data.status == 2 && <Badge color="green">Payed</Badge>}
         </div>
-        <div className="inline-flex gap-6">
+        <div className="inline-flex flex-wrap gap-4">
           <div className="">
             <span className="text-gray-500 font-bold">
               {FormatDate(data.delivery_day)}
