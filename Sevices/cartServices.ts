@@ -5,6 +5,7 @@ import {
   increase_qty,
   remove_from_cart,
 } from "@/Features/Cart/cartSlice";
+import { open_auth_modal } from "@/Features/Layout/layoutSlice";
 import Supabase from "@/lib/helper/ClientSupabase";
 import { Dispatch, UnknownAction } from "@reduxjs/toolkit";
 
@@ -17,6 +18,9 @@ class CartService {
 
   // add to the cart (local and  Supabase)
   async addItem(item: CartItem) {
+    const { data: user_data } = await Supabase.auth.getUser();
+    if (!user_data.user?.id) return this.dispatch(open_auth_modal());
+
     // save on Supabase
     const { data, error } = await Supabase.from("bb_cart")
       .insert({

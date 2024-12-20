@@ -13,7 +13,7 @@ export async function save_order({
   status,
   total_price,
 }: PropTypes) {
-  await Supabase.from("bb_orders")
+  const { data } = await Supabase.from("bb_orders")
     .insert({
       items,
       delivery_day,
@@ -25,4 +25,5 @@ export async function save_order({
   items.map(
     async (item) => await Supabase.from("bb_cart").delete().eq("id", item.id)
   );
+  return data;
 }

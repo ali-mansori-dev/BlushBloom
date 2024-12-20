@@ -1,7 +1,5 @@
 "use client";
-import { CardItemComponent } from "@/components/Cart/CardItem";
 import { Button, Container } from "@mantine/core";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { save_order } from "./functions";
@@ -11,15 +9,14 @@ import { useDispatch } from "react-redux";
 
 const page = () => {
   const router = useRouter();
-  const navigate = () => {
-    router.push("/payment");
+  const navigate = (id: string) => {
+    router.push(`/payment/${id}`);
   };
   const carts = useSelector((state: any) => state.cart.items);
   const [totalPrice, setTotalPrice] = useState<Number>();
   const [deliveryDay, setDeliveryDay] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
-
   const today = new Date();
 
   // Function to calculate future dates
@@ -78,7 +75,7 @@ const page = () => {
 
   const onPayHandle = async () => {
     setLoading(true);
-    await save_order({
+    const data = await save_order({
       delivery_day: deliveryDay,
       items: carts,
       status: 1,
@@ -86,7 +83,7 @@ const page = () => {
     });
     setLoading(false);
     dispatch(clear_cart());
-    navigate();
+    data && navigate(data[0]?.id ?? "");
   };
 
   return (
