@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { Button, Container } from "@mantine/core";
 import Link from "next/link";
 import React from "react";
@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 
 const page = () => {
   const { user_info } = useSelector((redux: any) => redux.auth);
+  
   return (
     <Container
       size={"xl"}
@@ -30,7 +31,9 @@ const page = () => {
           </span>
         </div>
         <div className="">
-          <Link href={`/panel/my-orders`}><Button variant="outline">My Orders</Button></Link>
+          <Link href={`/panel/my-orders`}>
+            <Button variant="outline">My Orders</Button>
+          </Link>
         </div>
       </div>
     </Container>

@@ -2,9 +2,10 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { ProductsTableRow } from "@/types/ProductsTableRow";
 import React, { useEffect, useState } from "react";
 import Supabase from "@/lib/helper/ClientSupabase";
-import { Grid, Skeleton } from "@mantine/core";
+import { Grid } from "@mantine/core";
 
 import { FeaturesCard } from "./FeaturesCard/FeaturesCard";
+import CartSkeleton from "./Skeleton/cart_skeleton";
 
 const ProductList = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -22,7 +23,14 @@ const ProductList = () => {
   }, []);
 
   if (isLoading) {
-    return <Skeleton height={50} />;
+    return (
+      <div className="flex flex-row gap-6">
+        <CartSkeleton />
+        <CartSkeleton />
+        <CartSkeleton />
+        <CartSkeleton />
+      </div>
+    );
   }
 
   return (

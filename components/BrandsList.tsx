@@ -6,6 +6,7 @@ import Supabase from "@/lib/helper/ClientSupabase";
 import { Grid, Skeleton } from "@mantine/core";
 
 import BrandCard from "./BrandCard";
+import BrandSkeleton from "./Skeleton/brand_skeleton";
 
 const BrandsList = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -22,7 +23,14 @@ const BrandsList = () => {
   }, []);
 
   if (isLoading) {
-    return <Skeleton height={50} />;
+    return (
+      <div className="flex flex-row gap-6">
+        <BrandSkeleton />
+        <BrandSkeleton />
+        <BrandSkeleton />
+        <BrandSkeleton />
+      </div>
+    );
   }
 
   return (

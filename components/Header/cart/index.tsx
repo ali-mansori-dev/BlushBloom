@@ -3,9 +3,14 @@ import { LuShoppingCart } from "react-icons/lu";
 import { CardItemComponent } from "../../Cart/CardItem";
 import { useSelector } from "react-redux";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { close_all } from "@/Features/Layout/layoutSlice";
 
 export default function Cart() {
   const carts = useSelector((state: any) => state.cart.items);
+  const dispatch = useDispatch();
+
+  const click = () => dispatch(close_all());
 
   return (
     <Menu shadow="md" width={450}>
@@ -24,7 +29,11 @@ export default function Cart() {
       <Menu.Dropdown className="!p-4">
         <div className="w-full inline-flex justify-between pb-4">
           <span className="text-base font-bold">Shoping Cart</span>
-          <Link href={"/cart"} className="text-base text-blue-700">
+          <Link
+            href={"/cart"}
+            onClick={click}
+            className="text-base text-blue-700"
+          >
             View All
           </Link>
         </div>

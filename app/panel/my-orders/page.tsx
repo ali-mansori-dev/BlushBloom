@@ -1,6 +1,6 @@
 "use client";
 import Supabase from "@/lib/helper/ClientSupabase";
-import { Container, Skeleton } from "@mantine/core";
+import { Container, Loader, Skeleton } from "@mantine/core";
 import React, { useEffect, useState } from "react";
 import { OrderType } from "./types";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
@@ -17,8 +17,6 @@ const page = () => {
     })();
   }, []);
 
-  
-
   return (
     <Container
       size={"xl"}
@@ -29,7 +27,9 @@ const page = () => {
           <OrderComponent key={index} data={item} />
         ))
       ) : (
-        <Skeleton height={100} />
+        <div className="w-full h-full flex items-center justify-center py-60">
+          <Loader type="dots" color="blue" />
+        </div>
       )}
     </Container>
   );

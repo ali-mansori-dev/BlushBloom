@@ -4,6 +4,8 @@ import { Grid, LoadingOverlay, Skeleton } from "@mantine/core";
 import { CategoryTableRow } from "@/types/CategoryTableRow";
 import CategoryCard from "@/components/CategoryCard/index";
 import Supabase from "@/lib/helper/ClientSupabase";
+import CartSkeleton from "./Skeleton/cart_skeleton";
+import CategorySkeleton from "./Skeleton/category_skeleton";
 
 const CategoryList = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -21,7 +23,14 @@ const CategoryList = () => {
   }, []);
 
   if (isLoading) {
-    return <Skeleton height={50} />;
+    return (
+      <div className="flex flex-row gap-6">
+        <CategorySkeleton />
+        <CategorySkeleton />
+        <CategorySkeleton />
+        <CategorySkeleton />
+      </div>
+    );
   }
 
   return (
