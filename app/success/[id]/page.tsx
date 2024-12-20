@@ -1,9 +1,23 @@
+"use client";
 import { Button, Container, Loader } from "@mantine/core";
 import Link from "next/link";
-import React from "react";
-import { LuCheck, LuCheckCircle } from "react-icons/lu";
+import React, { useEffect } from "react";
+import { LuCheckCircle } from "react-icons/lu";
+import { useParams } from "next/navigation";
+import Supabase from "@/lib/helper/ClientSupabase";
 
 const page = () => {
+  const params = useParams();
+  const id = params.id;
+
+  useEffect(() => {
+    (async function () {
+      const { data } = await Supabase.from("bb_orders")
+        .update({ status: 2 })
+        .eq("id", id);
+    })();
+  }, [id]);
+
   return (
     <Container
       size={"xl"}
@@ -22,7 +36,7 @@ const page = () => {
             <Button variant="outline">Home Page</Button>
           </Link>
           <Link href={`/panel/my-orders`}>
-            <Button variant="filled">Check Status</Button>
+            <Button variant="filled">Check Order</Button>
           </Link>
         </div>
       </div>

@@ -44,11 +44,11 @@ export function HeaderMegaMenu() {
     (async function () {
       const user = await Supabase.auth.getUser();
       if (user) {
-        const user_id = user.data.user?.id;
+        const user_id = user?.data?.user?.id;
         const { data } = await Supabase.rpc("get_cart_with_product_details", {
           user_uuid: user_id,
         });
-        data.map((value: any) => {
+        data?.map((value: any) => {
           dispatch(
             add_to_cart({
               id: value.cart_id,

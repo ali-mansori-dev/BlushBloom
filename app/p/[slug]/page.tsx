@@ -45,7 +45,6 @@ const Slug = () => {
   const carts = useSelector((state: any) => state.cart.items);
 
   useEffect(() => {
-    console.log(carts, data);
     if (data && carts) {
       const item = carts.find((item: any) => item.product_id === data?.id);
       item?.id && setCartItems(item);

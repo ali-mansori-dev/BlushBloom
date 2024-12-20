@@ -3,8 +3,9 @@ import { open_auth_modal } from "@/Features/Layout/layoutSlice";
 import Supabase from "@/lib/helper/ClientSupabase";
 import { Menu, rem, ActionIcon } from "@mantine/core";
 import { UserResponse } from "@supabase/supabase-js";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { LuUser, LuLayoutDashboard, LuLogOut } from "react-icons/lu";
+import { LuUser, LuLayoutDashboard, LuLogOut, LuBox } from "react-icons/lu";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
@@ -39,20 +40,29 @@ export default function UserDropDown() {
       </Menu.Target>
 
       <Menu.Dropdown>
-        <Menu.Item
-          leftSection={
-            <LuLayoutDashboard style={{ width: rem(14), height: rem(14) }} />
-          }
-        >
-          <div className="flex flex-col gap-0">
-            <span className="text-base font-bold">
-              {user?.data?.user?.user_metadata?.full_name}
-            </span>
-            <span className="text-sm text-gray-500">
-              {user?.data?.user?.email}
-            </span>
-          </div>
-        </Menu.Item>
+        <Link href={`/panel`}>
+          <Menu.Item
+            leftSection={
+              <LuLayoutDashboard style={{ width: rem(14), height: rem(14) }} />
+            }
+          >
+            <div className="flex flex-col gap-0">
+              <span className="text-base font-bold">
+                {user?.data?.user?.user_metadata?.full_name}
+              </span>
+              <span className="text-sm text-gray-500">
+                {user?.data?.user?.email}
+              </span>
+            </div>
+          </Menu.Item>
+        </Link>
+        <Link href={`/panel/my-orders`}>
+          <Menu.Item
+            leftSection={<LuBox style={{ width: rem(14), height: rem(14) }} />}
+          >
+            <div className="flex flex-col gap-0">My Orders</div>
+          </Menu.Item>
+        </Link>
         <Menu.Divider />
         <Menu.Item
           onClick={logout_handle}
