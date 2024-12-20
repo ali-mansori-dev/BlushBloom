@@ -39,10 +39,8 @@ const page = () => {
   const formatDate = (date: any) => {
     if (date === undefined) return;
     return date.toLocaleDateString("en-US", {
-      weekday: "long",
       month: "short",
       day: "numeric",
-      year: "numeric",
     });
   };
 
@@ -81,7 +79,6 @@ const page = () => {
       status: 1,
       total_price: totalPrice,
     });
-    setLoading(false);
     dispatch(clear_cart());
     data && navigate(data[0]?.id ?? "");
   };
@@ -114,20 +111,24 @@ const page = () => {
           )}
           <div className="">Delivery Day</div>
           <div className="flex flex-row gap-6">
-            {delivery_dates.map((item, index) => (
-              <div
-                key={index}
-                onClick={() => setDeliveryDay(item.value)}
-                className={`flex flex-col items-center border border-gray-100 gap-1 cursor-pointer rounded-md p-3 w-[105px] ${
-                  formatDate(deliveryDay) === formatDate(item.value) &&
-                  "border-blue-400"
-                }`}
-              >
-                <span className="text-base">{item.title.weekday}</span>
-                <span className="text-base font-bold">{item.title.day}</span>
-                <span className="text-sm">{item.title.month}</span>
-              </div>
-            ))}
+            {delivery_dates.map((item, index) => {
+              const isActive =
+                formatDate(deliveryDay) === formatDate(item.value);
+
+              return (
+                <div
+                  key={index}
+                  onClick={() => setDeliveryDay(item.value)}
+                  className={`flex flex-col items-center border border-gray-100 gap-1 cursor-pointer rounded-md p-3 w-[105px] ${
+                    isActive === true && "!border-blue-400"
+                  }`}
+                >
+                  <span className="text-base">{item.title.weekday}</span>
+                  <span className="text-base font-bold">{item.title.day}</span>
+                  <span className="text-sm">{item.title.month}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
         <div className="w-1/4 flex flex-col gap-3">

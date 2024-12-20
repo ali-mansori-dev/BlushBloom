@@ -91,7 +91,7 @@ const Slug = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full h-full flex items-center justify-center py-28">
+      <div className="w-full h-full flex items-center justify-center py-60">
         <Loader type="dots" color="blue" />
       </div>
     );
