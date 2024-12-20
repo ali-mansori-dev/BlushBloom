@@ -18,8 +18,17 @@ class CartService {
 
   // add to the cart (local and  Supabase)
   async addItem(item: CartItem) {
+    // user must logged in
     const { data: user_data } = await Supabase.auth.getUser();
     if (!user_data.user?.id) return this.dispatch(open_auth_modal());
+
+    // cart not exist in cart table
+    const { data: existing_data } = await Supabase.from("bb_cart")
+      .select()
+      .eq("product_id", item?.product_id)
+      .eq("user_id", user_data.user?.id);
+
+    if (existing_data && existing_data?.length > 0) return;
 
     // save on Supabase
     const { data, error } = await Supabase.from("bb_cart")

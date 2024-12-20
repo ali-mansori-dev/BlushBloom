@@ -37,6 +37,7 @@ const Slug = () => {
 
   // states
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [cartLoading, setCartLoading] = useState<boolean>(false);
   const [data, setData] = useState<ProductsTableRow>();
   const [color, setColor] = useState<OptionType>();
   const [size, setSize] = useState<OptionType>();
@@ -51,9 +52,10 @@ const Slug = () => {
     }
   }, [carts, data]);
 
-  const handleAddToCart = (e: any) => {
+  const handleAddToCart = async (e: any) => {
+    setCartLoading(true);
     e.preventDefault(); // Prevent navigation when clicking the button
-    cartService.addItem({
+    await cartService.addItem({
       color: color?.value,
       size: size?.value,
       image_url: `${data?.images[0]}`,
@@ -62,11 +64,14 @@ const Slug = () => {
       price: data?.price,
       quantity: 1,
     });
+    setCartLoading(false);
   };
 
-  const handleRemoveFromCart = () => {
-    cartService.removeItem(`${cartItems?.id}`);
+  const handleRemoveFromCart = async () => {
+    setCartLoading(true);
+    await cartService.removeItem(`${cartItems?.id}`);
     setCartItems(undefined);
+    setCartLoading(false);
   };
 
   useEffect(() => {
@@ -176,13 +181,21 @@ const Slug = () => {
               fullWidth
               variant="outline"
               size="sm"
+              loading={cartLoading}
+              loaderProps={{ type: "dots" }}
               onClick={handleRemoveFromCart}
             >
               Remove from Cart
             </Button>
           </div>
         ) : (
-          <Button fullWidth size="sm" onClick={handleAddToCart}>
+          <Button
+            fullWidth
+            size="sm"
+            loading={cartLoading}
+            loaderProps={{ type: "dots" }}
+            onClick={handleAddToCart}
+          >
             Add to Cart
           </Button>
         )}
