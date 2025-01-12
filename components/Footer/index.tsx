@@ -89,6 +89,7 @@ export function Footer() {
           >
             ali-mansori-dev
           </a>
+          Hossein Porfarhad
         </Text>
 
         <Group gap={12} className={``} justify="flex-end" wrap="nowrap">
